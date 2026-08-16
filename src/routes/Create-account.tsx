@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useState } from "react";
 import styled from "styled-components";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   height: 100%;
@@ -49,12 +52,12 @@ const Error = styled.span`
   color: #ed4848;
 `;
 export default function CreateAccount() {
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
+  const navigate = useNavigate();
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name, value },
@@ -67,12 +70,25 @@ export default function CreateAccount() {
       setPassword(value);
     }
   };
-  const onSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isLoading || name === "" || email === "" || password === "") {
+      return;
+    }
     try {
-      //create account
-      //set name of the user
-      //redirect to home page
+      setLoading(true);
+      const credentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+
+      console.log(credentials.user);
+      await updateProfile(credentials.user, {
+        displayName: name,
+      });
+
+      navigate("/");
     } catch (err) {
       //setError
     } finally {
@@ -91,7 +107,6 @@ export default function CreateAccount() {
             value={name}
             type="text"
             placeholder="Name"
-            required
           />
           <Input
             onChange={onChange}
@@ -99,7 +114,6 @@ export default function CreateAccount() {
             value={email}
             placeholder="Email"
             type="email"
-            required
           />
           <Input
             onChange={onChange}
@@ -107,14 +121,13 @@ export default function CreateAccount() {
             placeholder="Password"
             type="password"
             value={password}
-            required
           />
           <Input
             type="submit"
             value={isLoading ? "Loading..." : "Create Account"}
           />
         </Form>
-        {error !== "" ? <Error>{}</Error> : null}
+        {error !== "" ? <Error>{`what the fuck`}</Error> : null}
       </Wrapper>
     </>
   );
