@@ -1,14 +1,15 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { auth } from "./firebase";
 import Layout from "./components/layout";
 import Home from "./routes/Home";
 import Profile from "./routes/Profile";
 import Login from "./routes/Login";
 import CreateAccount from "./routes/Create-account";
-import { reset } from "styled-reset";
-import { createGlobalStyle } from "styled-components";
-import { useEffect, useState } from "react";
 import LoadingScreen from "./components/loading-screen";
-import { auth } from "./firebase";
+import GrobalStyles from "./styles/global-style";
+import styled from "styled-components";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -33,32 +34,27 @@ const router = createBrowserRouter([
     element: <CreateAccount />,
   },
 ]);
-
-const GrobalStyles = createGlobalStyle`
-  ${reset};
-  body{
-    background-color: #17181a;
-    color: white;
-    font-family: "Saira Stencil", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 400;
-  }
+const Container = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
 `;
+
 function App() {
   const [isLoading, setLoading] = useState(true);
   const init = async () => {
     await auth.authStateReady();
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    setLoading(false);
   };
   useEffect(() => {
     init();
   }, []);
   return (
     <>
-      <GrobalStyles />
-      {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
+      <Container>
+        <GrobalStyles />
+        {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
+      </Container>
     </>
   );
 }
