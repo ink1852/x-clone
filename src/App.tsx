@@ -10,6 +10,7 @@ import Profile from "./routes/Profile";
 import Login from "./routes/Login";
 import CreateAccount from "./routes/Create-account";
 import LoadingScreen from "./components/loading-screen";
+import Header from "./components/Header";
 
 const router = createBrowserRouter([
   {
@@ -36,9 +37,10 @@ const router = createBrowserRouter([
   },
 ]);
 const Container = styled.div`
-  height: 100vh;
-  display: flex;
-  justify-content: center;
+  height: 90vh;
+  min-width: 280px;
+  max-width: 420px;
+  margin: 0 auto;
 `;
 
 const GrobalStyles = createGlobalStyle`
@@ -77,7 +79,9 @@ function App() {
           rel="stylesheet"
         />
       </Helmet>
+
       <Container>
+        <Header />
         <GrobalStyles />
         {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
       </Container>

@@ -6,7 +6,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 420px;
   padding: 50px 0px;
 `;
 const Title = styled.h1`
@@ -84,7 +83,7 @@ export default function CreateAccount() {
   return (
     <>
       <Wrapper>
-        <Title>Log Into X</Title>
+        <Title>Sign In</Title>
         <Form onSubmit={onSubmit}>
           <Input
             onChange={onChange}
