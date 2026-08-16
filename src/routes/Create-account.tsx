@@ -1,56 +1,17 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useState } from "react";
-import styled from "styled-components";
 import { auth } from "../firebase";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { FirebaseError } from "firebase/app";
+import {
+  Error,
+  Form,
+  Input,
+  Switcher,
+  Title,
+  Wrapper,
+} from "../components/auth-component";
 
-const Wrapper = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 50px 0px;
-`;
-const Title = styled.h1`
-  font-size: 42px;
-`;
-const Form = styled.form`
-  margin-top: 50px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-`;
-const Input = styled.input`
-  padding: 10px 20px;
-  border-radius: 24px;
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 16px;
-  &[type="submit"] {
-    cursor: pointer;
-    &:hover {
-      opacity: 0.85;
-    }
-  }
-`;
-const Error = styled.span`
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    "Open Sans",
-    "Helvetica Neue",
-    sans-serif;
-  font-weight: bold;
-  color: #ed4848;
-`;
 export default function CreateAccount() {
   const [isLoading, setLoading] = useState(false);
   const [name, setName] = useState("");
@@ -72,6 +33,7 @@ export default function CreateAccount() {
   };
   const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
     if (isLoading || name === "" || email === "" || password === "") {
       return;
     }
@@ -90,7 +52,9 @@ export default function CreateAccount() {
 
       navigate("/");
     } catch (err) {
-      //setError
+      if (err instanceof FirebaseError) {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -107,6 +71,7 @@ export default function CreateAccount() {
             value={name}
             type="text"
             placeholder="Name"
+            required
           />
           <Input
             onChange={onChange}
@@ -114,6 +79,7 @@ export default function CreateAccount() {
             value={email}
             placeholder="Email"
             type="email"
+            required
           />
           <Input
             onChange={onChange}
@@ -121,13 +87,17 @@ export default function CreateAccount() {
             placeholder="Password"
             type="password"
             value={password}
+            required
           />
           <Input
             type="submit"
             value={isLoading ? "Loading..." : "Create Account"}
           />
         </Form>
-        {error !== "" ? <Error>{`what the fuck`}</Error> : null}
+        {error !== "" ? <Error>{error}</Error> : null}
+        <Switcher>
+          Aready have an account? <Link to="/login">Log In</Link>
+        </Switcher>
       </Wrapper>
     </>
   );

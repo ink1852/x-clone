@@ -60,6 +60,10 @@ const GrobalStyles = createGlobalStyle`
   *{
     box-sizing: border-box;
   }
+  a{
+    text-decoration: underline;
+    color: inherit;
+  }
 `;
 function App() {
   const [isLoading, setLoading] = useState(true);
