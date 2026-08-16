@@ -11,11 +11,16 @@ import Login from "./routes/Login";
 import CreateAccount from "./routes/Create-account";
 import LoadingScreen from "./components/loading-screen";
 import Header from "./components/Header";
+import ProtectedRoute from "./components/protected-route";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
