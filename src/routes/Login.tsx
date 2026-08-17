@@ -72,8 +72,8 @@ export default function Login() {
         <Switcher>
           Don't have an account? <Link to="/create-account">Sign In</Link>
         </Switcher>
-        <GithubButton />
         <GoogleButton />
+        <GithubButton />
       </Wrapper>
     </>
   );

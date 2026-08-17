@@ -11,6 +11,7 @@ import {
   Title,
   Wrapper,
 } from "../components/auth-component";
+import { GithubButton, GoogleButton } from "../components/aurh-btn";
 
 export default function CreateAccount() {
   const [isLoading, setLoading] = useState(false);
@@ -45,7 +46,7 @@ export default function CreateAccount() {
         password,
       );
 
-      console.log(credentials.user);
+      //console.log(credentials.user);
       await updateProfile(credentials.user, {
         displayName: name,
       });
@@ -93,10 +94,11 @@ export default function CreateAccount() {
             value={isLoading ? "Loading..." : "Create Account"}
           />
         </Form>
-
         <Switcher>
           Aready have an account? <Link to="/login">Log In</Link>
         </Switcher>
+        <GoogleButton />
+        <GithubButton />
         {error !== "" ? <Error>{error}</Error> : null}
       </Wrapper>
     </>

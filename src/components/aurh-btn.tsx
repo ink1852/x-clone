@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
+import { useState } from "react";
 
 const Button = styled.button`
   width: 100%;
@@ -27,9 +28,12 @@ const Logo = styled.img`
 `;
 
 export function GithubButton() {
+  const [loading, setLoading] = useState(false);
   const nav = useNavigate();
   const onClick = async () => {
+    if (loading) return;
     try {
+      setLoading(true);
       const provider = new GithubAuthProvider();
       await signInWithPopup(auth, provider);
       nav("/");
@@ -37,13 +41,15 @@ export function GithubButton() {
       if (err instanceof FirebaseError) {
         console.log(err.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
   return (
     <>
       <Button onClick={onClick}>
         <Logo src="/github-logo.svg" />
-        Continue with GitHub
+        {loading ? "Loading..." : "Continue with Github"}
       </Button>
     </>
   );
