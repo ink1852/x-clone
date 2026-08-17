@@ -11,6 +11,7 @@ import {
   Title,
   Wrapper,
 } from "../components/auth-component";
+import { GithubButton, GoogleButton } from "../components/aurh-btn";
 
 export default function Login() {
   const [isLoading, setLoading] = useState(false);
@@ -71,6 +72,8 @@ export default function Login() {
         <Switcher>
           Don't have an account? <Link to="/create-account">Sign In</Link>
         </Switcher>
+        <GithubButton />
+        <GoogleButton />
       </Wrapper>
     </>
   );

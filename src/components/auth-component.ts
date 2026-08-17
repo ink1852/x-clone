@@ -1,14 +1,19 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
+  --twitter-color: #1d9bf0;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 50px 0px;
+  * {
+    font-family: sans-serif;
+  }
 `;
 export const Title = styled.h1`
   font-size: 42px;
+  font-family: "Saira Stencil";
 `;
 export const Form = styled.form`
   margin-top: 50px;
@@ -16,14 +21,17 @@ export const Form = styled.form`
   flex-direction: column;
   gap: 10px;
   width: 100%;
+  position: relative;
 `;
 export const Input = styled.input`
-  padding: 10px 20px;
-  border-radius: 24px;
+  padding: 16px 20px;
+  border-radius: 50px;
   border: none;
   outline: none;
   width: 100%;
   font-size: 16px;
+  display: flex;
+  align-items: center;
   &[type="submit"] {
     cursor: pointer;
     &:hover {
@@ -33,15 +41,14 @@ export const Input = styled.input`
 `;
 export const Error = styled.span`
   margin-top: 5px;
-  font-family: system-ui;
   color: #ed4848;
   text-align: center;
 `;
 export const Switcher = styled.span`
-  font-family: system-ui;
-  margin-top: 20px;
+  margin-top: 10px;
+  margin-bottom: 50px;
   font-size: 16px;
   a {
-    color: #1d9bf0;
+    color: var(--twitter-color);
   }
 `;

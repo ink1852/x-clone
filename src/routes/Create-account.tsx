@@ -49,7 +49,6 @@ export default function CreateAccount() {
       await updateProfile(credentials.user, {
         displayName: name,
       });
-
       navigate("/");
     } catch (err) {
       if (err instanceof FirebaseError) {
@@ -70,8 +69,8 @@ export default function CreateAccount() {
             name="name"
             value={name}
             type="text"
-            placeholder="Name"
             required
+            placeholder="Name"
           />
           <Input
             onChange={onChange}
@@ -94,10 +93,11 @@ export default function CreateAccount() {
             value={isLoading ? "Loading..." : "Create Account"}
           />
         </Form>
-        {error !== "" ? <Error>{error}</Error> : null}
+
         <Switcher>
           Aready have an account? <Link to="/login">Log In</Link>
         </Switcher>
+        {error !== "" ? <Error>{error}</Error> : null}
       </Wrapper>
     </>
   );

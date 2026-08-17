@@ -52,7 +52,7 @@ const GrobalStyles = createGlobalStyle`
   ${reset};
   body{
     background-color: #17181a;
-    color: white;
+    color: white ;
     font-family: "Saira Stencil", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
