@@ -4,14 +4,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import {
-  Error,
   Form,
+  GetAuthErrorMessage,
   Input,
+  OrLine,
   Switcher,
   Title,
   Wrapper,
 } from "../components/auth-component";
-import { GithubButton, GoogleButton } from "../components/aurh-btn";
+import AuthButtons from "../components/auth-btns";
 
 export default function Login() {
   const [isLoading, setLoading] = useState(false);
@@ -19,6 +20,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name, value },
@@ -41,7 +43,7 @@ export default function Login() {
       navigate("/");
     } catch (err) {
       if (err instanceof FirebaseError) {
-        setError(err.message);
+        setError(err.code);
       }
     } finally {
       setLoading(false);
@@ -51,6 +53,8 @@ export default function Login() {
     <>
       <Wrapper>
         <Title>Log In</Title>
+        <AuthButtons />
+        <OrLine />
         <Form onSubmit={onSubmit}>
           <Input
             onChange={onChange}
@@ -68,12 +72,11 @@ export default function Login() {
           />
           <Input type="submit" value={isLoading ? "Loading..." : "Log In"} />
         </Form>
-        {error !== "" ? <Error>{error}</Error> : null}
         <Switcher>
           Don't have an account? <Link to="/create-account">Sign In</Link>
         </Switcher>
-        <GoogleButton />
-        <GithubButton />
+
+        <GetAuthErrorMessage errCode={error} />
       </Wrapper>
     </>
   );

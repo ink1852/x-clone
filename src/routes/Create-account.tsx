@@ -4,14 +4,15 @@ import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import {
-  Error,
   Form,
+  GetAuthErrorMessage,
   Input,
+  OrLine,
   Switcher,
   Title,
   Wrapper,
 } from "../components/auth-component";
-import { GithubButton, GoogleButton } from "../components/aurh-btn";
+import AuthButtons from "../components/auth-btns";
 
 export default function CreateAccount() {
   const [isLoading, setLoading] = useState(false);
@@ -45,25 +46,24 @@ export default function CreateAccount() {
         email,
         password,
       );
-
-      //console.log(credentials.user);
       await updateProfile(credentials.user, {
         displayName: name,
       });
       navigate("/");
     } catch (err) {
       if (err instanceof FirebaseError) {
-        setError(err.message);
+        setError(err.code);
       }
     } finally {
       setLoading(false);
     }
-    //console.log(password, email, name);
   };
   return (
     <>
       <Wrapper>
         <Title>Sign In</Title>
+        <AuthButtons />
+        <OrLine />
         <Form onSubmit={onSubmit}>
           <Input
             onChange={onChange}
@@ -97,9 +97,7 @@ export default function CreateAccount() {
         <Switcher>
           Aready have an account? <Link to="/login">Log In</Link>
         </Switcher>
-        <GoogleButton />
-        <GithubButton />
-        {error !== "" ? <Error>{error}</Error> : null}
+        <GetAuthErrorMessage errCode={error} />
       </Wrapper>
     </>
   );

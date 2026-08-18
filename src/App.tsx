@@ -12,6 +12,7 @@ import CreateAccount from "./routes/Create-account";
 import LoadingScreen from "./components/loading-screen";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/protected-route";
+import "./styles/style.css";
 
 const router = createBrowserRouter([
   {
