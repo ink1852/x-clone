@@ -24,7 +24,6 @@ const Button = styled.button`
   align-items: center;
   gap: 12px;
   font-size: 16px;
-  cursor: pointer;
 `;
 const Logo = styled.img`
   height: 24px;

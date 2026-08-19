@@ -13,6 +13,7 @@ import LoadingScreen from "./components/loading-screen";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/protected-route";
 import "./styles/style.css";
+import ResetPswd from "./routes/reset-pswd";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
     path: "/create-account",
     element: <CreateAccount />,
   },
+  {
+    path: "/reset-pswd",
+    element: <ResetPswd />,
+  },
 ]);
 const Container = styled.div`
   height: 90vh;
@@ -54,7 +59,7 @@ const GrobalStyles = createGlobalStyle`
   body{
     background-color: #17181a;
     color: white ;
-    font-family: "Saira Stencil", sans-serif;
+    font-family: system-ui, "Saira Stencil", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
   }
@@ -64,6 +69,9 @@ const GrobalStyles = createGlobalStyle`
   a{
     text-decoration: underline;
     color: inherit;
+  }
+  button{
+    cursor: pointer;
   }
 `;
 function App() {

@@ -62,6 +62,7 @@ export default function Login() {
             value={email}
             placeholder="Email"
             type="email"
+            required
           />
           <Input
             onChange={onChange}
@@ -69,13 +70,16 @@ export default function Login() {
             placeholder="Password"
             type="password"
             value={password}
+            required
           />
           <Input type="submit" value={isLoading ? "Loading..." : "Log In"} />
         </Form>
         <Switcher>
           Don't have an account? <Link to="/create-account">Sign In</Link>
         </Switcher>
-
+        <Switcher>
+          Forget password? <Link to="/reset-pswd">Click Here</Link>
+        </Switcher>
         <GetAuthErrorMessage errCode={error} />
       </Wrapper>
     </>

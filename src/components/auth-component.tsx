@@ -3,14 +3,12 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   --twitter-color: #1d9bf0;
+  --error-color: #ed4848;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 50px 0px;
-  * {
-    font-family: sans-serif;
-  }
 `;
 export const Title = styled.h1`
   font-size: 42px;
@@ -43,13 +41,13 @@ export const Input = styled.input`
 `;
 export const Switcher = styled.span`
   margin-top: 16px;
-  margin-bottom: 50px;
   font-size: 16px;
   a {
     color: var(--twitter-color);
   }
 `;
 
+/* ---또는--- */
 export const Line = styled.div`
   margin: 36px 0;
   display: flex;
@@ -76,9 +74,9 @@ export function OrLine() {
 
 /* error message */
 export const Error = styled.span`
-  margin-top: 5px;
-  color: #ed4848;
+  color: var(--error-color);
   text-align: center;
+  margin-top: 16px;
 `;
 export function GetAuthErrorMessage({ errCode }: { errCode: string }) {
   const [error, setError] = useState("");
@@ -93,7 +91,7 @@ export function GetAuthErrorMessage({ errCode }: { errCode: string }) {
         break;
 
       case "auth/invalid-credential":
-        setError("로그인 인증 정보가 올바르지 않습니다.");
+        setError("이메일 또는 비밀번호가 올바르지 않습니다.");
         break;
       case "auth/email-already-in-use":
         setError("이미 가입된 이메일입니다.");

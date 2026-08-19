@@ -8,7 +8,6 @@ const Wrapper = styled.div`
 `;
 const Title = styled.h1`
   font-size: 50px;
-  cursor: pointer;
 `;
 function Header() {
   return (
