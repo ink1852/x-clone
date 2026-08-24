@@ -1,14 +1,18 @@
 import {
   GithubAuthProvider,
   signInWithPopup,
-  signInWithRedirect,
   GoogleAuthProvider,
 } from "firebase/auth";
 import styled from "styled-components";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
-import { useState, type MouseEventHandler } from "react";
+import {
+  useState,
+  type Dispatch,
+  type MouseEventHandler,
+  type SetStateAction,
+} from "react";
 const Wrapper = styled.div`
   width: 100%;
   margin-top: 50px;
@@ -45,8 +49,10 @@ function AuthBtn({ authSrc, imageSrc, onclick }: onClickType) {
     </>
   );
 }
-
-function GithubButton() {
+interface IAuthErr {
+  authErr: Dispatch<SetStateAction<string>>;
+}
+function GithubButton({ authErr }: IAuthErr) {
   const [loading, setLoading] = useState(false);
   const nav = useNavigate();
   const onClick = async () => {
@@ -55,10 +61,11 @@ function GithubButton() {
       setLoading(true);
       const provider = new GithubAuthProvider();
       await signInWithPopup(auth, provider);
-      nav("/");
+      nav("/home");
     } catch (err) {
       if (err instanceof FirebaseError) {
-        console.log(err.message);
+        console.log(err.code);
+        authErr(err.code);
       }
     } finally {
       setLoading(false);
@@ -74,16 +81,17 @@ function GithubButton() {
     </>
   );
 }
-function GoogleButton() {
+function GoogleButton({ authErr }: IAuthErr) {
   const nav = useNavigate();
   const onClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-      nav("/");
+      nav("/home");
     } catch (err) {
       if (err instanceof FirebaseError) {
-        console.log(err.message);
+        console.log(err.code);
+        authErr(err.code);
       }
     }
   };
@@ -98,12 +106,12 @@ function GoogleButton() {
   );
 }
 
-export default function AuthButtons() {
+export default function AuthButtons({ authErr }: IAuthErr) {
   return (
     <>
       <Wrapper>
-        <GithubButton />
-        <GoogleButton />
+        <GithubButton authErr={authErr} />
+        <GoogleButton authErr={authErr} />
       </Wrapper>
     </>
   );

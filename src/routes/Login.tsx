@@ -7,6 +7,7 @@ import {
   Form,
   GetAuthErrorMessage,
   Input,
+  Logo,
   OrLine,
   Switcher,
   Title,
@@ -20,7 +21,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name, value },
@@ -40,7 +40,7 @@ export default function Login() {
     try {
       setLoading(true);
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/");
+      navigate("/home");
     } catch (err) {
       if (err instanceof FirebaseError) {
         setError(err.code);
@@ -52,8 +52,9 @@ export default function Login() {
   return (
     <>
       <Wrapper>
+        <Logo src={"/X-logo.svg"} />
         <Title>Log In</Title>
-        <AuthButtons />
+        <AuthButtons authErr={setError} />
         <OrLine />
         <Form onSubmit={onSubmit}>
           <Input
@@ -80,7 +81,7 @@ export default function Login() {
         <Switcher>
           Forget password? <Link to="/reset-pswd">Click Here</Link>
         </Switcher>
-        <GetAuthErrorMessage errCode={error} />
+        <GetAuthErrorMessage errCode={error || ""} />
       </Wrapper>
     </>
   );

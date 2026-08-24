@@ -7,6 +7,7 @@ import {
   Form,
   GetAuthErrorMessage,
   Input,
+  Logo,
   OrLine,
   Switcher,
   Title,
@@ -49,7 +50,7 @@ export default function CreateAccount() {
       await updateProfile(credentials.user, {
         displayName: name,
       });
-      navigate("/");
+      navigate("/home");
     } catch (err) {
       if (err instanceof FirebaseError) {
         setError(err.code);
@@ -61,8 +62,9 @@ export default function CreateAccount() {
   return (
     <>
       <Wrapper>
+        <Logo src={"/X-logo.svg"} />
         <Title>Sign In</Title>
-        <AuthButtons />
+        <AuthButtons authErr={setError} />
         <OrLine />
         <Form onSubmit={onSubmit}>
           <Input
@@ -97,7 +99,7 @@ export default function CreateAccount() {
         <Switcher>
           Aready have an account? <Link to="/login">Log In</Link>
         </Switcher>
-        <GetAuthErrorMessage errCode={error} />
+        <GetAuthErrorMessage errCode={error || ""} />
       </Wrapper>
     </>
   );

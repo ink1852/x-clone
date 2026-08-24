@@ -10,10 +10,9 @@ import Profile from "./routes/Profile";
 import Login from "./routes/Login";
 import CreateAccount from "./routes/Create-account";
 import LoadingScreen from "./components/loading-screen";
-import Header from "./components/Header";
 import ProtectedRoute from "./components/protected-route";
-import "./styles/style.css";
 import ResetPswd from "./routes/reset-pswd";
+import Notification from "./routes/Notification";
 
 const router = createBrowserRouter([
   {
@@ -25,12 +24,16 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        index: true,
+        path: "home",
         element: <Home />,
       },
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "notification",
+        element: <Notification />,
       },
     ],
   },
@@ -48,10 +51,13 @@ const router = createBrowserRouter([
   },
 ]);
 const Container = styled.div`
-  height: 90vh;
+  /* height: 90vh;
   min-width: 280px;
   max-width: 420px;
-  margin: 0 auto;
+  margin: 0 auto; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const GrobalStyles = createGlobalStyle`
@@ -67,7 +73,7 @@ const GrobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
   a{
-    text-decoration: underline;
+    text-decoration: none;
     color: inherit;
   }
   button{
@@ -99,7 +105,6 @@ function App() {
       </Helmet>
 
       <Container>
-        <Header />
         <GrobalStyles />
         {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
       </Container>

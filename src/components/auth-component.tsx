@@ -1,19 +1,25 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-
+import { useEffect, useState } from "react";
 export const Wrapper = styled.div`
   --twitter-color: #1d9bf0;
   --error-color: #ed4848;
-  height: 100%;
+  width: 420px;
+  /* height: 100%; */
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 50px 0px;
 `;
+export const Logo = styled.img`
+  height: 50px;
+`;
 export const Title = styled.h1`
   font-size: 42px;
   font-family: "Saira Stencil";
+  margin-top: 50px;
 `;
+
+/* Form */
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -35,14 +41,17 @@ export const Input = styled.input`
     background-color: var(--twitter-color);
     color: white;
     &:hover {
-      opacity: 0.9;
+      opacity: 0.8;
     }
   }
 `;
+
+/* Switcher */
 export const Switcher = styled.span`
   margin-top: 16px;
   font-size: 16px;
   a {
+    text-decoration: underline;
     color: var(--twitter-color);
   }
 `;
@@ -72,7 +81,7 @@ export function OrLine() {
   );
 }
 
-/* error message */
+/* error */
 export const Error = styled.span`
   color: var(--error-color);
   text-align: center;
@@ -85,11 +94,12 @@ export function GetAuthErrorMessage({ errCode }: { errCode: string }) {
       case "auth/popup-blocked":
         setError("브라우저에서 팝업이 차단되었습니다.");
         break;
-
-      case "auth/cancelled-popup-request":
-        setError("이미 로그인 창이 열려 있습니다.");
+      case "auth/popup-closed-by-user":
+        setError("");
         break;
-
+      case "auth/cancelled-popup-request":
+        setError("닫아");
+        break;
       case "auth/invalid-credential":
         setError("이메일 또는 비밀번호가 올바르지 않습니다.");
         break;
@@ -97,7 +107,7 @@ export function GetAuthErrorMessage({ errCode }: { errCode: string }) {
         setError("이미 가입된 이메일입니다.");
         break;
       case "auth/account-exists-with-different-credential":
-        setError("이미 다른 로그인 방법으로 가입된 계정입니다.");
+        setError("다른 로그인 방법으로 가입된 계정입니다.");
         break;
       case "auth/weak-password":
         setError("비밀번호는 최소 6자리 이상이어야 합니다.");
