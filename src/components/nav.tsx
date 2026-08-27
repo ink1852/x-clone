@@ -2,11 +2,10 @@ import { Link, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "../firebase";
 import { useState } from "react";
+import ProfilePhoto from "./profile-photo";
+
 const Header = styled.header`
-  --hover-color: #c4c4c411;
-  --border-color: #f3f3f323;
-  --bg-color: #17181a;
-  border-right: 1px solid var(--border-color);
+  border-right: 1px solid ${(prop) => prop.theme.colors.border};
   display: flex;
   justify-content: end;
   > div {
@@ -38,7 +37,8 @@ const MenuItem = styled.div<{ $logo?: boolean }>`
   padding-right: ${(prop) => (prop.$logo ? "12px" : "18px")};
   border-radius: 50px;
   &:hover {
-    background-color: ${(prop) => (prop.$logo ? "var(--hover-color)" : null)};
+    background-color: ${(prop) =>
+      prop.$logo ? prop.theme.colors.hover : null};
   }
 `;
 const MenuContainer = styled.div`
@@ -57,7 +57,7 @@ const MenuContainer = styled.div`
     &:hover {
       ${MenuItem} {
         transition: all 0.25s;
-        background-color: var(--hover-color);
+        background-color: ${(prop) => prop.theme.colors.hover};
       }
     }
   }
@@ -85,7 +85,7 @@ const Button = styled.button`
   width: 100%;
   &:hover {
     transition: background-color 0.25s;
-    background-color: var(--hover-color);
+    background-color: ${(prop) => prop.theme.colors.hover};
   }
   /* user name */
   > span {
@@ -105,11 +105,11 @@ const EpliseIcon = styled.div`
     height: 20px;
   }
 `;
-const ProfileImg = styled.img`
+/* const ProfileImg = styled.img`
   height: 40px;
   border-radius: 50%;
   margin-right: 12px;
-`;
+`; */
 const Modal = styled.div<{ $isModalOpen: boolean }>`
   display: none;
   display: ${(prop) => (prop.$isModalOpen ? "flex" : "none")};
@@ -122,14 +122,13 @@ const ModalBg = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  /* background-color: #a4303046; */
 `;
 const ModalBox = styled.div`
   transition: background-color 0.25s;
   position: absolute;
   left: 0;
   bottom: 80px;
-  background-color: #1f1e1e;
+  background-color: ${(prop) => prop.theme.colors.logOutBox};
   width: 280px;
   padding: 12px 0px;
   border-radius: 12px;
@@ -141,7 +140,7 @@ const LogOutBox = styled.div`
   font-weight: bold;
   &:hover {
     cursor: pointer;
-    background-color: var(--hover-color);
+    background-color: ${(prop) => prop.theme.colors.hover};
   }
 `;
 
@@ -285,9 +284,7 @@ export function Nav() {
           </Menu>
           <Account>
             <Button onClick={() => setIsModalOpen(true)}>
-              <ProfileImg
-                src={`${auth.currentUser?.photoURL ?? "/public/user.jpg"}`}
-              />
+              <ProfilePhoto />
               <span>{userName}</span>
               <EpliseIcon>
                 <svg

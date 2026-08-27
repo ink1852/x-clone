@@ -1,55 +1,12 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { auth } from "./firebase";
 import { reset } from "styled-reset";
 import { Helmet } from "react-helmet-async";
 import { styled, createGlobalStyle } from "styled-components";
-import Layout from "./components/layout";
-import Home from "./routes/Home";
-import Profile from "./routes/Profile";
-import Login from "./routes/Login";
-import CreateAccount from "./routes/Create-account";
+import router from "./routes/Root";
 import LoadingScreen from "./components/loading-screen";
-import ProtectedRoute from "./components/protected-route";
-import ResetPswd from "./routes/reset-pswd";
-import Notification from "./routes/Notification";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <ProtectedRoute>
-        <Layout />
-      </ProtectedRoute>
-    ),
-    children: [
-      {
-        path: "home",
-        element: <Home />,
-      },
-      {
-        path: "profile",
-        element: <Profile />,
-      },
-      {
-        path: "notification",
-        element: <Notification />,
-      },
-    ],
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/create-account",
-    element: <CreateAccount />,
-  },
-  {
-    path: "/reset-pswd",
-    element: <ResetPswd />,
-  },
-]);
 const Container = styled.div`
   /* height: 90vh;
   min-width: 280px;
@@ -63,7 +20,7 @@ const Container = styled.div`
 const GrobalStyles = createGlobalStyle`
   ${reset};
   body{
-    background-color: #17181a;
+    background-color: ${(prop) => prop.theme.colors.background};
     color: white ;
     font-family: system-ui, "Saira Stencil", sans-serif;
     font-optical-sizing: auto;
