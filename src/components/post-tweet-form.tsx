@@ -36,7 +36,34 @@ const TextArea = styled.textarea`
     }
   }
 `;
-const ImgContent = styled.div``;
+const PhotoContent = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: 16px 0;
+`;
+const CancelBtn = styled.div`
+  cursor: pointer;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px;
+  border-radius: 50%;
+  background-color: #2d2d2d;
+  border: none;
+  & > svg {
+    color: #fff;
+    height: 20px;
+  }
+  &:hover {
+    background-color: #4e4d4d;
+  }
+`;
+const Photo = styled.img`
+  width: 480px;
+  border-radius: 20px;
+`;
 const ToolBar = styled.div`
   width: 100%;
   display: flex;
@@ -67,39 +94,68 @@ const Icon = styled.div`
 `;
 const AttachFileInput = styled.input``;
 const SubmitBtn = styled.button<{ $isTweet: boolean }>`
+  cursor: ${(prop) => (prop.$isTweet ? "cursor" : "auto")};
   outline: none;
   border: none;
   padding: 8px 16px;
   border-radius: 50px;
   font-size: 16px;
   font-weight: bold;
+  color: ${(prop) => prop.theme.colors.background};
+`;
+const FileSizeError = styled.span`
+  margin: 16px 0;
+  font-size: 14px;
+  color: ${(prop) => prop.theme.colors.error};
 `;
 export default function PostTweetForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [textAreaRows, setTextAreaRows] = useState(3);
   const [isTweet, setIsTweet] = useState(false);
   const [tweet, setTweet] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [textAreaRows, setTextAreaRows] = useState(3);
+  const [file, setFile] = useState<string | null>(null);
+  const [fileSizeError, setFileSizeError] = useState(false);
+
+  /** 파이어베이스에 저장되는 doc 노드 최대 용량이 1mb, 1000kb는 이미지, 24kb는 나머지 용량 */
+  const FILE_SIZE = 1024 * 1000;
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const tweetLength = e.currentTarget.value.length;
     tweetLength > 80 ? setTextAreaRows(6) : setTextAreaRows(3);
-    if (tweetLength > 160 || tweet.startsWith(" ")) {
-      setIsTweet(false);
-    } else {
-      setIsTweet(true);
-    }
+    tweetLength > 150 || tweet.startsWith(" ")
+      ? setIsTweet(false)
+      : setIsTweet(true);
     setTweet(e.currentTarget.value);
   };
+
+  const onFocus = () => {
+    if (fileSizeError) {
+      setFileSizeError(false);
+    }
+  };
+
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (files && files.length === 1) {
-      setFile(files[0]);
+      const reader = new FileReader();
+      const theFile = files[0];
+      if (theFile.size < FILE_SIZE) {
+        // base64 인코딩
+        reader.readAsDataURL(theFile);
+        reader.onloadend = () => {
+          setFile(reader.result as string);
+        };
+        //console.log(theFile.size);
+      } else {
+        setFileSizeError(true);
+        return;
+      }
     }
   };
+
   const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isLoading || tweet.startsWith(" ")) return;
+    if (isLoading || tweet.startsWith(" ") || tweet === "") return;
     try {
       const user = auth.currentUser;
       setIsLoading(true);
@@ -108,16 +164,19 @@ export default function PostTweetForm() {
         createAt: Date.now(),
         username: user?.displayName ?? "Anonymous",
         userId: user?.uid,
+        fileData: file,
       });
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      console.log(err);
     } finally {
       setIsLoading(false);
       setIsTweet(false);
+      setFileSizeError(false);
       setTextAreaRows(3);
       setTweet("");
+      setFile(null);
     }
-    console.log(tweet, tweet.length);
+    //console.log(tweet, tweet.length);
   };
   return (
     <>
@@ -127,11 +186,40 @@ export default function PostTweetForm() {
           <TextArea
             id="text-tweet"
             onChange={onChange}
+            onFocus={onFocus}
             rows={textAreaRows}
             placeholder="What's happening?(150자 까지)"
             value={tweet}
-          ></TextArea>
-          <ImgContent>{file !== null ? file.name : "add photo"}</ImgContent>
+          />
+
+          {file !== null ? (
+            <PhotoContent>
+              <CancelBtn
+                onClick={() => {
+                  setFile(null);
+                }}
+              >
+                <svg
+                  fill="none"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18 18 6M6 6l12 12"
+                  />
+                </svg>
+              </CancelBtn>
+              <Photo src={file} />
+            </PhotoContent>
+          ) : fileSizeError ? (
+            <FileSizeError>용량이 너무 큽니다</FileSizeError>
+          ) : null}
+
           <ToolBar>
             <AttachFileButton htmlFor="file">
               <Icon>

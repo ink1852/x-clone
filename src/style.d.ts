@@ -6,6 +6,8 @@ declare module "styled-components" {
       border: string;
       background: string;
       logOutBox: string;
+      error: string;
+      twitter: string;
     };
     border: {
       default: string;

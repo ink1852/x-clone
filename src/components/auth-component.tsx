@@ -1,10 +1,7 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 export const Wrapper = styled.div`
-  --twitter-color: #1d9bf0;
-  --error-color: #ed4848;
   width: 420px;
-  /* height: 100%; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -38,7 +35,7 @@ export const Input = styled.input`
   align-items: center;
   &[type="submit"] {
     cursor: pointer;
-    background-color: var(--twitter-color);
+    background-color: ${(prop) => prop.theme.colors.twitter};
     color: white;
     &:hover {
       opacity: 0.8;
@@ -52,7 +49,7 @@ export const Switcher = styled.span`
   font-size: 16px;
   a {
     text-decoration: underline;
-    color: var(--twitter-color);
+    color: ${(prop) => prop.theme.colors.twitter};
   }
 `;
 
@@ -83,7 +80,7 @@ export function OrLine() {
 
 /* error */
 export const Error = styled.span`
-  color: var(--error-color);
+  color: ${(prop) => prop.theme.colors.error};
   text-align: center;
   margin-top: 16px;
 `;

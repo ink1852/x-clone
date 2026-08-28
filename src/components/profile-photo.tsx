@@ -7,5 +7,5 @@ const Img = styled.img`
   margin-right: 12px;
 `;
 export default function ProfilePhoto() {
-  return <Img src={`${auth.currentUser?.photoURL ?? "/public/user.jpg"}`} />;
+  return <Img src={`${auth?.currentUser?.photoURL ?? "/public/user.jpg"}`} />;
 }
