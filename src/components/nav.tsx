@@ -4,21 +4,18 @@ import { auth } from "../firebase";
 import { useState } from "react";
 import ProfilePhoto from "./profile-photo";
 
-const Header = styled.header`
-  border-right: 1px solid ${(prop) => prop.theme.colors.border};
+const Container = styled.div`
+  position: fixed;
+  left: 200px;
+`;
+const Wrapper = styled.div`
+  width: inherit;
   display: flex;
-  justify-content: end;
-  > div {
-    width: inherit;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 275px;
-    padding: 0 8px;
-    & + .logOutBox {
-      display: none;
-    }
-  }
+  flex-direction: column;
+  justify-content: space-between;
+  width: 280px;
+  padding: 0 8px;
+  height: 100vh;
 `;
 const Menu = styled.div`
   display: flex;
@@ -160,8 +157,8 @@ export function Nav() {
   };
   return (
     <>
-      <Header>
-        <div>
+      <Container>
+        <Wrapper>
           <Menu>
             <Link to={"/home"}>
               <MenuContainer>
@@ -314,8 +311,8 @@ export function Nav() {
               </ModalBox>
             </Modal>
           </Account>
-        </div>
-      </Header>
+        </Wrapper>
+      </Container>
     </>
   );
 }

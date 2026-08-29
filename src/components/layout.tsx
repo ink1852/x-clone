@@ -9,11 +9,11 @@ const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
 `;
-const Main = styled.main`
-  display: flex;
-  justify-content: space-between;
-  /* background-color: #193e63; */
+const Header = styled.header`
+  border-right: 1px solid ${(prop) => prop.theme.colors.border};
 `;
+const Main = styled.main``;
+
 export default function Layout() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -23,7 +23,9 @@ export default function Layout() {
   return (
     <>
       <Wrapper>
-        <Nav />
+        <Header>
+          <Nav />
+        </Header>
         <Main>
           <Outlet />
         </Main>

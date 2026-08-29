@@ -22,12 +22,11 @@ const TextArea = styled.textarea`
   background-color: transparent;
   font-family: sans-serif;
   font-size: 18px;
-  padding-top: 6px;
   color: white;
   border: none;
+  outline: none;
   resize: none;
   &:focus {
-    outline: none;
     border-bottom: ${(prop) => prop.theme.border.default};
   }
   &:not(:placeholder-shown) {
@@ -41,23 +40,24 @@ const PhotoContent = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  margin: 16px 0;
+  margin-top: 16px;
 `;
 const CancelBtn = styled.div`
   cursor: pointer;
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 8px;
+  right: 8px;
   padding: 6px;
   border-radius: 50%;
-  background-color: #2d2d2d;
+  background-color: #000000ca;
   border: none;
   & > svg {
     color: #fff;
     height: 20px;
   }
   &:hover {
-    background-color: #4e4d4d;
+    transition: background-color 0.25s;
+    background-color: #272727c7;
   }
 `;
 const Photo = styled.img`
@@ -103,34 +103,42 @@ const SubmitBtn = styled.button<{ $isTweet: boolean }>`
   font-weight: bold;
   color: ${(prop) => prop.theme.colors.background};
 `;
-const FileSizeError = styled.span`
+const Error = styled.span`
   margin: 16px 0;
   font-size: 14px;
   color: ${(prop) => prop.theme.colors.error};
 `;
+const DivButInput = styled.div`
+  padding: 8px;
+  background-color: ${(prop) => prop.theme.colors.background};
+  outline: none;
+  font-size: 20px;
+  color: white;
+`;
 export default function PostTweetForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [textAreaRows, setTextAreaRows] = useState(3);
+  const [textAreaRows, setTextAreaRows] = useState(0);
   const [isTweet, setIsTweet] = useState(false);
   const [tweet, setTweet] = useState("");
   const [file, setFile] = useState<string | null>(null);
-  const [fileSizeError, setFileSizeError] = useState(false);
+  const [imgSizeError, setImgSizeError] = useState(false);
 
   /** 파이어베이스에 저장되는 doc 노드 최대 용량이 1mb, 1000kb는 이미지, 24kb는 나머지 용량 */
   const FILE_SIZE = 1024 * 1000;
+  /** 최대 작성 길이 */
+  const MAX_TEXT_LENGTH = 160;
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const tweetLength = e.currentTarget.value.length;
-    tweetLength > 80 ? setTextAreaRows(6) : setTextAreaRows(3);
-    tweetLength > 150 || tweet.startsWith(" ")
+    tweetLength > MAX_TEXT_LENGTH || tweet.startsWith(" ")
       ? setIsTweet(false)
       : setIsTweet(true);
     setTweet(e.currentTarget.value);
   };
 
   const onFocus = () => {
-    if (fileSizeError) {
-      setFileSizeError(false);
+    if (imgSizeError) {
+      setImgSizeError(false);
     }
   };
 
@@ -145,9 +153,8 @@ export default function PostTweetForm() {
         reader.onloadend = () => {
           setFile(reader.result as string);
         };
-        //console.log(theFile.size);
       } else {
-        setFileSizeError(true);
+        setImgSizeError(true);
         return;
       }
     }
@@ -164,33 +171,53 @@ export default function PostTweetForm() {
         createAt: Date.now(),
         username: user?.displayName ?? "Anonymous",
         userId: user?.uid,
-        fileData: file,
+        photo: file,
       });
     } catch (err) {
       console.log(err);
     } finally {
       setIsLoading(false);
       setIsTweet(false);
-      setFileSizeError(false);
+      setImgSizeError(false);
       setTextAreaRows(3);
       setTweet("");
       setFile(null);
     }
-    //console.log(tweet, tweet.length);
   };
+  /* const [text, setText] = useState("");
+  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const newT = e.currentTarget.innerText;
+    setText(newT);
+  };
+  console.log(text); */
   return (
     <>
       <Wrapper>
         <ProfilePhoto />
         <Form onSubmit={onSubmit}>
           <TextArea
-            id="text-tweet"
+            name="text-tweet"
             onChange={onChange}
             onFocus={onFocus}
-            rows={textAreaRows}
-            placeholder="What's happening?(150자 까지)"
+            rows={3}
+            placeholder={`What's happening?(${MAX_TEXT_LENGTH}자 까지)`}
             value={tweet}
           />
+          {/* <div
+            style={{
+              width: "inherit",
+              padding: "8px",
+              backgroundColor: "skyblue",
+              margin: "16px 0px",
+            }}
+          >
+            <DivButInput
+              onKeyDown={onKeyDown}
+              role="textbox"
+              contentEditable="true"
+              spellCheck="true"
+            ></DivButInput>
+          </div> */}
 
           {file !== null ? (
             <PhotoContent>
@@ -214,10 +241,10 @@ export default function PostTweetForm() {
                   />
                 </svg>
               </CancelBtn>
-              <Photo src={file} />
+              <Photo src={file}></Photo>
             </PhotoContent>
-          ) : fileSizeError ? (
-            <FileSizeError>용량이 너무 큽니다</FileSizeError>
+          ) : imgSizeError ? (
+            <Error>용량이 너무 큽니다</Error>
           ) : null}
 
           <ToolBar>

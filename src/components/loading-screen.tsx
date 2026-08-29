@@ -6,14 +6,14 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const Text = styled.span`
-  font-size: 24px;
+const Logo = styled.img`
+  height: 50px;
 `;
 export default function LoadingScreen() {
   return (
     <>
       <Wrapper>
-        <Text>Loading...</Text>
+        <Logo src="/X-logo.svg" />
       </Wrapper>
     </>
   );
